@@ -2,9 +2,9 @@
 Contributors: techjewel,adreastrian,heera,wpmanageninja,hasanuzzamanshamim
 Tags: PDF, Form To PDF, attachment, fluent forms
 Requires at least: 5.0
-Tested up to: 6.4.2
-Requires PHP: 5.6
-Stable tag: 1.1.8
+Tested up to: 6.7.1
+Requires PHP: 7.4
+Stable tag: 1.1.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,7 +42,11 @@ You can also send these PDF files via emails to your users and make them passwor
 
 == Changelog ==
 
-= 1.1.8 - January 18, 2024 =
+= 1.1.9 - Dec 6, 2024 =
+- Fixed watermark inactive issue
+- Fixed stop getting PDF if submission is trashed
+
+= 1.1.8 - June 22, 2023 =
 - Fixes input sanitization and output escaping
 
 = 1.1.7 - June 22, 2023 =

@@ -82,8 +82,12 @@ class InvoiceTemplate extends TemplateManager
     {
         $settings = $feed['settings'];
         $submission = wpFluent()->table('fluentform_submissions')
-                        ->where('id', $submissionId)
-                        ->first();
+                                ->where('id', $submissionId)
+                                ->where('status', '!=', 'trashed')
+                                ->first();
+        if (!$submission) {
+            return '';
+        }
         $formData = json_decode($submission->response, true);
 
         $settings['invoice_lines'] = '{payment.order_items}';

@@ -67,7 +67,12 @@ class GeneralTemplate extends TemplateManager
         $settings = $feed['settings'];
         $submission = wpFluent()->table('fluentform_submissions')
             ->where('id', $submissionId)
+            ->where('status', '!=', 'trashed')
             ->first();
+        if (!$submission) {
+            return '';
+        }
+
         $formData = json_decode($submission->response, true);
 
         $settings = ShortCodeParser::parse($settings, $submissionId, $formData, null, false, 'pdfFeed');

@@ -303,6 +303,9 @@ class GlobalPdfManager
             ->first();
 
         $settings = json_decode($feed->value, true);
+        if (ArrayHelper::isTrue($settings, 'appearance.watermark_img_behind')) {
+            $settings['appearance']['watermark_img_behind'] = true;
+        }
         $templateName = ArrayHelper::get($settings, 'template_key');
 
         $templates = $this->getAvailableTemplates($form);
@@ -418,6 +421,7 @@ class GlobalPdfManager
             'invoice_prefix'     => 'sanitize_text_field',
             'customer_name'      => 'sanitize_text_field',
             'customer_email'     => 'sanitize_email',
+            'watermark_img_behind'=> 'rest_sanitize_boolean',
             'customer_address'   => 'sanitize_text_field'
         ];
         $feed = $this->sanitizeData($feed, $sanitizerMap);

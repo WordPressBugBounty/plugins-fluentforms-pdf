@@ -24,12 +24,14 @@ class FontFileFinder
 	public function findFontFile($name)
 	{
 		foreach ($this->directories as $directory) {
-			$filename = $directory . '/' . $name;
+            
+            $filename = $directory . '/' . $name;
+            
 			if (file_exists($filename)) {
-				return $filename;
+                return $filename;
 			}
 		}
-
-		throw new \Mpdf\MpdfException(sprintf('Cannot find TTF TrueType font file "%s" in configured font directories.', $name));
+  
+        throw new \Mpdf\MpdfException(sprintf('Cannot find TTF TrueType font file "%s" in configured font directories.', $name));
 	}
 }
