@@ -8,6 +8,7 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
 {
     public static $files = array (
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
+        'db356362850385d08a5381de2638b5fd' => __DIR__ . '/..' . '/mpdf/mpdf/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -18,9 +19,12 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
         ),
         'M' => 
         array (
+            'Mpdf\\PsrLogAwareTrait\\' => 22,
+            'Mpdf\\PsrHttpMessageShim\\' => 24,
             'Mpdf\\' => 5,
         ),
         'D' => 
@@ -38,6 +42,18 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Mpdf\\PsrLogAwareTrait\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src',
+        ),
+        'Mpdf\\PsrHttpMessageShim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src',
+        ),
         'Mpdf\\' => 
         array (
             0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
@@ -53,6 +69,7 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'DeepCopy\\DeepCopy' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',
         'DeepCopy\\Exception\\CloneException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/CloneException.php',
         'DeepCopy\\Exception\\PropertyException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/PropertyException.php',
+        'DeepCopy\\Filter\\ChainableFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Filter/ChainableFilter.php',
         'DeepCopy\\Filter\\Doctrine\\DoctrineCollectionFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Filter/Doctrine/DoctrineCollectionFilter.php',
         'DeepCopy\\Filter\\Doctrine\\DoctrineEmptyCollectionFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Filter/Doctrine/DoctrineEmptyCollectionFilter.php',
         'DeepCopy\\Filter\\Doctrine\\DoctrineProxyFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Filter/Doctrine/DoctrineProxyFilter.php',
@@ -67,6 +84,7 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'DeepCopy\\Matcher\\PropertyTypeMatcher' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Matcher/PropertyTypeMatcher.php',
         'DeepCopy\\Reflection\\ReflectionHelper' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Reflection/ReflectionHelper.php',
         'DeepCopy\\TypeFilter\\Date\\DateIntervalFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/TypeFilter/Date/DateIntervalFilter.php',
+        'DeepCopy\\TypeFilter\\Date\\DatePeriodFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/TypeFilter/Date/DatePeriodFilter.php',
         'DeepCopy\\TypeFilter\\ReplaceFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/TypeFilter/ReplaceFilter.php',
         'DeepCopy\\TypeFilter\\ShallowCopyFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/TypeFilter/ShallowCopyFilter.php',
         'DeepCopy\\TypeFilter\\Spl\\ArrayObjectFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/TypeFilter/Spl/ArrayObjectFilter.php',
@@ -74,6 +92,7 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'DeepCopy\\TypeFilter\\Spl\\SplDoublyLinkedListFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/TypeFilter/Spl/SplDoublyLinkedListFilter.php',
         'DeepCopy\\TypeFilter\\TypeFilter' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/TypeFilter/TypeFilter.php',
         'DeepCopy\\TypeMatcher\\TypeMatcher' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/TypeMatcher/TypeMatcher.php',
+        'Mpdf\\AssetFetcher' => __DIR__ . '/..' . '/mpdf/mpdf/src/AssetFetcher.php',
         'Mpdf\\Barcode' => __DIR__ . '/..' . '/mpdf/mpdf/src/Barcode.php',
         'Mpdf\\Barcode\\AbstractBarcode' => __DIR__ . '/..' . '/mpdf/mpdf/src/Barcode/AbstractBarcode.php',
         'Mpdf\\Barcode\\BarcodeException' => __DIR__ . '/..' . '/mpdf/mpdf/src/Barcode/BarcodeException.php',
@@ -98,6 +117,9 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'Mpdf\\Color\\NamedColors' => __DIR__ . '/..' . '/mpdf/mpdf/src/Color/NamedColors.php',
         'Mpdf\\Config\\ConfigVariables' => __DIR__ . '/..' . '/mpdf/mpdf/src/Config/ConfigVariables.php',
         'Mpdf\\Config\\FontVariables' => __DIR__ . '/..' . '/mpdf/mpdf/src/Config/FontVariables.php',
+        'Mpdf\\Container\\ContainerInterface' => __DIR__ . '/..' . '/mpdf/mpdf/src/Container/ContainerInterface.php',
+        'Mpdf\\Container\\NotFoundException' => __DIR__ . '/..' . '/mpdf/mpdf/src/Container/NotFoundException.php',
+        'Mpdf\\Container\\SimpleContainer' => __DIR__ . '/..' . '/mpdf/mpdf/src/Container/SimpleContainer.php',
         'Mpdf\\Conversion\\DecToAlpha' => __DIR__ . '/..' . '/mpdf/mpdf/src/Conversion/DecToAlpha.php',
         'Mpdf\\Conversion\\DecToCjk' => __DIR__ . '/..' . '/mpdf/mpdf/src/Conversion/DecToCjk.php',
         'Mpdf\\Conversion\\DecToHebrew' => __DIR__ . '/..' . '/mpdf/mpdf/src/Conversion/DecToHebrew.php',
@@ -108,7 +130,11 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'Mpdf\\Css\\DefaultCss' => __DIR__ . '/..' . '/mpdf/mpdf/src/Css/DefaultCss.php',
         'Mpdf\\Css\\TextVars' => __DIR__ . '/..' . '/mpdf/mpdf/src/Css/TextVars.php',
         'Mpdf\\DirectWrite' => __DIR__ . '/..' . '/mpdf/mpdf/src/DirectWrite.php',
+        'Mpdf\\Exception\\AssetFetchingException' => __DIR__ . '/..' . '/mpdf/mpdf/src/Exception/AssetFetchingException.php',
+        'Mpdf\\Exception\\FontException' => __DIR__ . '/..' . '/mpdf/mpdf/src/Exception/FontException.php',
         'Mpdf\\Exception\\InvalidArgumentException' => __DIR__ . '/..' . '/mpdf/mpdf/src/Exception/InvalidArgumentException.php',
+        'Mpdf\\File\\LocalContentLoader' => __DIR__ . '/..' . '/mpdf/mpdf/src/File/LocalContentLoader.php',
+        'Mpdf\\File\\LocalContentLoaderInterface' => __DIR__ . '/..' . '/mpdf/mpdf/src/File/LocalContentLoaderInterface.php',
         'Mpdf\\File\\StreamWrapperChecker' => __DIR__ . '/..' . '/mpdf/mpdf/src/File/StreamWrapperChecker.php',
         'Mpdf\\Fonts\\FontCache' => __DIR__ . '/..' . '/mpdf/mpdf/src/Fonts/FontCache.php',
         'Mpdf\\Fonts\\FontFileFinder' => __DIR__ . '/..' . '/mpdf/mpdf/src/Fonts/FontFileFinder.php',
@@ -124,6 +150,13 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'Mpdf\\Gif\\Lzw' => __DIR__ . '/..' . '/mpdf/mpdf/src/Gif/Lzw.php',
         'Mpdf\\Gradient' => __DIR__ . '/..' . '/mpdf/mpdf/src/Gradient.php',
         'Mpdf\\HTMLParserMode' => __DIR__ . '/..' . '/mpdf/mpdf/src/HTMLParserMode.php',
+        'Mpdf\\Http\\ClientInterface' => __DIR__ . '/..' . '/mpdf/mpdf/src/Http/ClientInterface.php',
+        'Mpdf\\Http\\CurlHttpClient' => __DIR__ . '/..' . '/mpdf/mpdf/src/Http/CurlHttpClient.php',
+        'Mpdf\\Http\\Exception\\ClientException' => __DIR__ . '/..' . '/mpdf/mpdf/src/Http/Exception/ClientException.php',
+        'Mpdf\\Http\\Exception\\ForbiddenRequestException' => __DIR__ . '/..' . '/mpdf/mpdf/src/Http/Exception/ForbiddenRequestException.php',
+        'Mpdf\\Http\\Exception\\NetworkException' => __DIR__ . '/..' . '/mpdf/mpdf/src/Http/Exception/NetworkException.php',
+        'Mpdf\\Http\\Exception\\RequestException' => __DIR__ . '/..' . '/mpdf/mpdf/src/Http/Exception/RequestException.php',
+        'Mpdf\\Http\\SocketHttpClient' => __DIR__ . '/..' . '/mpdf/mpdf/src/Http/SocketHttpClient.php',
         'Mpdf\\Hyphenator' => __DIR__ . '/..' . '/mpdf/mpdf/src/Hyphenator.php',
         'Mpdf\\Image\\Bmp' => __DIR__ . '/..' . '/mpdf/mpdf/src/Image/Bmp.php',
         'Mpdf\\Image\\ImageProcessor' => __DIR__ . '/..' . '/mpdf/mpdf/src/Image/ImageProcessor.php',
@@ -141,10 +174,16 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'Mpdf\\Otl' => __DIR__ . '/..' . '/mpdf/mpdf/src/Otl.php',
         'Mpdf\\OtlDump' => __DIR__ . '/..' . '/mpdf/mpdf/src/OtlDump.php',
         'Mpdf\\Output\\Destination' => __DIR__ . '/..' . '/mpdf/mpdf/src/Output/Destination.php',
+        'Mpdf\\PageBox' => __DIR__ . '/..' . '/mpdf/mpdf/src/PageBox.php',
         'Mpdf\\PageFormat' => __DIR__ . '/..' . '/mpdf/mpdf/src/PageFormat.php',
         'Mpdf\\Pdf\\Protection' => __DIR__ . '/..' . '/mpdf/mpdf/src/Pdf/Protection.php',
         'Mpdf\\Pdf\\Protection\\UniqidGenerator' => __DIR__ . '/..' . '/mpdf/mpdf/src/Pdf/Protection/UniqidGenerator.php',
-        'Mpdf\\RemoteContentFetcher' => __DIR__ . '/..' . '/mpdf/mpdf/src/RemoteContentFetcher.php',
+        'Mpdf\\PsrHttpMessageShim\\Request' => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src/Request.php',
+        'Mpdf\\PsrHttpMessageShim\\Response' => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src/Response.php',
+        'Mpdf\\PsrHttpMessageShim\\Stream' => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src/Stream.php',
+        'Mpdf\\PsrHttpMessageShim\\Uri' => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src/Uri.php',
+        'Mpdf\\PsrLogAwareTrait\\MpdfPsrLogAwareTrait' => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src/MpdfPsrLogAwareTrait.php',
+        'Mpdf\\PsrLogAwareTrait\\PsrLogAwareTrait' => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src/PsrLogAwareTrait.php',
         'Mpdf\\ServiceFactory' => __DIR__ . '/..' . '/mpdf/mpdf/src/ServiceFactory.php',
         'Mpdf\\Shaper\\Indic' => __DIR__ . '/..' . '/mpdf/mpdf/src/Shaper/Indic.php',
         'Mpdf\\Shaper\\Myanmar' => __DIR__ . '/..' . '/mpdf/mpdf/src/Shaper/Myanmar.php',
@@ -269,6 +308,9 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'Mpdf\\Utils\\NumericString' => __DIR__ . '/..' . '/mpdf/mpdf/src/Utils/NumericString.php',
         'Mpdf\\Utils\\PdfDate' => __DIR__ . '/..' . '/mpdf/mpdf/src/Utils/PdfDate.php',
         'Mpdf\\Utils\\UtfString' => __DIR__ . '/..' . '/mpdf/mpdf/src/Utils/UtfString.php',
+        'Mpdf\\Watermark' => __DIR__ . '/..' . '/mpdf/mpdf/src/Watermark.php',
+        'Mpdf\\WatermarkImage' => __DIR__ . '/..' . '/mpdf/mpdf/src/WatermarkImage.php',
+        'Mpdf\\WatermarkText' => __DIR__ . '/..' . '/mpdf/mpdf/src/WatermarkText.php',
         'Mpdf\\Writer\\BackgroundWriter' => __DIR__ . '/..' . '/mpdf/mpdf/src/Writer/BackgroundWriter.php',
         'Mpdf\\Writer\\BaseWriter' => __DIR__ . '/..' . '/mpdf/mpdf/src/Writer/BaseWriter.php',
         'Mpdf\\Writer\\BookmarkWriter' => __DIR__ . '/..' . '/mpdf/mpdf/src/Writer/BookmarkWriter.php',
@@ -282,6 +324,13 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'Mpdf\\Writer\\OptionalContentWriter' => __DIR__ . '/..' . '/mpdf/mpdf/src/Writer/OptionalContentWriter.php',
         'Mpdf\\Writer\\PageWriter' => __DIR__ . '/..' . '/mpdf/mpdf/src/Writer/PageWriter.php',
         'Mpdf\\Writer\\ResourceWriter' => __DIR__ . '/..' . '/mpdf/mpdf/src/Writer/ResourceWriter.php',
+        'Psr\\Http\\Message\\MessageInterface' => __DIR__ . '/..' . '/psr/http-message/src/MessageInterface.php',
+        'Psr\\Http\\Message\\RequestInterface' => __DIR__ . '/..' . '/psr/http-message/src/RequestInterface.php',
+        'Psr\\Http\\Message\\ResponseInterface' => __DIR__ . '/..' . '/psr/http-message/src/ResponseInterface.php',
+        'Psr\\Http\\Message\\ServerRequestInterface' => __DIR__ . '/..' . '/psr/http-message/src/ServerRequestInterface.php',
+        'Psr\\Http\\Message\\StreamInterface' => __DIR__ . '/..' . '/psr/http-message/src/StreamInterface.php',
+        'Psr\\Http\\Message\\UploadedFileInterface' => __DIR__ . '/..' . '/psr/http-message/src/UploadedFileInterface.php',
+        'Psr\\Http\\Message\\UriInterface' => __DIR__ . '/..' . '/psr/http-message/src/UriInterface.php',
         'Psr\\Log\\AbstractLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/AbstractLogger.php',
         'Psr\\Log\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/log/Psr/Log/InvalidArgumentException.php',
         'Psr\\Log\\LogLevel' => __DIR__ . '/..' . '/psr/log/Psr/Log/LogLevel.php',
@@ -295,9 +344,13 @@ class ComposerStaticInitcb2e8db1537f8802c82769340a29d128
         'Psr\\Log\\Test\\TestLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/TestLogger.php',
         'setasign\\Fpdi\\FpdfTpl' => __DIR__ . '/..' . '/setasign/fpdi/src/FpdfTpl.php',
         'setasign\\Fpdi\\FpdfTplTrait' => __DIR__ . '/..' . '/setasign/fpdi/src/FpdfTplTrait.php',
+        'setasign\\Fpdi\\FpdfTrait' => __DIR__ . '/..' . '/setasign/fpdi/src/FpdfTrait.php',
         'setasign\\Fpdi\\Fpdi' => __DIR__ . '/..' . '/setasign/fpdi/src/Fpdi.php',
         'setasign\\Fpdi\\FpdiException' => __DIR__ . '/..' . '/setasign/fpdi/src/FpdiException.php',
         'setasign\\Fpdi\\FpdiTrait' => __DIR__ . '/..' . '/setasign/fpdi/src/FpdiTrait.php',
+        'setasign\\Fpdi\\GraphicsState' => __DIR__ . '/..' . '/setasign/fpdi/src/GraphicsState.php',
+        'setasign\\Fpdi\\Math\\Matrix' => __DIR__ . '/..' . '/setasign/fpdi/src/Math/Matrix.php',
+        'setasign\\Fpdi\\Math\\Vector' => __DIR__ . '/..' . '/setasign/fpdi/src/Math/Vector.php',
         'setasign\\Fpdi\\PdfParser\\CrossReference\\AbstractReader' => __DIR__ . '/..' . '/setasign/fpdi/src/PdfParser/CrossReference/AbstractReader.php',
         'setasign\\Fpdi\\PdfParser\\CrossReference\\CrossReference' => __DIR__ . '/..' . '/setasign/fpdi/src/PdfParser/CrossReference/CrossReference.php',
         'setasign\\Fpdi\\PdfParser\\CrossReference\\CrossReferenceException' => __DIR__ . '/..' . '/setasign/fpdi/src/PdfParser/CrossReference/CrossReferenceException.php',

@@ -4,7 +4,7 @@ Tags: PDF, Form To PDF, attachment, fluent forms
 Requires at least: 5.0
 Tested up to: 6.7.1
 Requires PHP: 7.4
-Stable tag: 1.1.9
+Stable tag: 1.1.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,11 @@ You can also send these PDF files via emails to your users and make them passwor
 
 
 == Changelog ==
+
+= 1.1.10 - Sep 1, 2024 =
+- Updated MPDF library
+- Add support for Fluent Forms Report Download
+- Fix: PDF {inputs.input_radio} values instead of label
 
 = 1.1.9 - Dec 6, 2024 =
 - Fixed watermark inactive issue

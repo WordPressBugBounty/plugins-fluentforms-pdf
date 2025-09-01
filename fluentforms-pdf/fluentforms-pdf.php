@@ -5,7 +5,7 @@
  * Description: Download entries as pdf with multiple template.
  * Author: WPManageNinja LLC
  * Author URI:  https://wpmanageninja.com
- * Version: 1.1.9
+ * Version: 1.1.10
  * Text Domain: fluentform-pdf
  * Domain Path: /assets/languages
  */
@@ -29,7 +29,7 @@
  */
 
 defined('ABSPATH') or die;
-define('FLUENTFORM_PDF_VERSION', '1.1.9');
+define('FLUENTFORM_PDF_VERSION', '1.1.10');
 define('FLUENTFORM_PDF_PATH', plugin_dir_path(__FILE__));
 define('FLUENTFORM_PDF_URL', plugin_dir_url(__FILE__));
 
@@ -61,6 +61,8 @@ class FluentFormPdf
         require_once FLUENTFORM_PDF_PATH . 'Classes/Templates/TemplateManager.php';
         require_once FLUENTFORM_PDF_PATH . 'Classes/Templates/GeneralTemplate.php';
         require_once FLUENTFORM_PDF_PATH . 'Classes/Templates/InvoiceTemplate.php';
+        
+        require_once FLUENTFORM_PDF_PATH . 'Classes/Report/ReportPdfGenerator.php';
     }
 
     protected function registerHooks($fluentForm)

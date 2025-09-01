@@ -4,7 +4,7 @@
 <div  class="font_downloader_wrapper text-center">
     <img class="mb-3" src="<?= FLUENTFORM_PDF_URL . 'assets/images/pdf-img.png'; ?>" alt="">
     <h3 class="mb-2"><?php echo __('Fonts are required for PDF Generation', 'fluentform-pdf') ?></h3>
-    <p class="mb-4"><?php echo __('This module requires to download fonts for PDF generation. Please click on the bellow button and it will download the required font files. This is one time job', 'fluentform-pdf') ?></p>
+    <p class="mb-4"><?php echo __('This module requires to download fonts for PDF generation. Please click on the below button and it will download the required font files. This is one time job', 'fluentform-pdf') ?></p>
     <button id="ff_download_fonts" class="el-button el-button--primary">
         <span class="ff_download_fonts_bar"></span>
         <span class="ff_download_fonts_text"><?php echo __('Install Fonts', 'fluentform-pdf') ?></span>

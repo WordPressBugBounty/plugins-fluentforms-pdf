@@ -161,8 +161,10 @@ abstract class TemplateManager
             $alpha = $alpha / 100;
 
             if (!empty($appearance['watermark_image'])) {
-                
-                $pdfGenerator->SetWatermarkImage($appearance['watermark_image'], $alpha);
+                $feedId = ArrayHelper::get($feed, 'id');
+                $watermarkImageSize = apply_filters('fluentform/pdf_watermark_image_size', 'D', $feedId);
+                $watermarkImagePosition = apply_filters('fluentform/pdf_watermark_image_position', 'F', $feedId);
+                $pdfGenerator->SetWatermarkImage($appearance['watermark_image'], $alpha, $watermarkImageSize, $watermarkImagePosition);
 
                 if( Arr::isTrue($appearance, 'watermark_img_behind' )){
                     $pdfGenerator->watermarkImgBehind = true;

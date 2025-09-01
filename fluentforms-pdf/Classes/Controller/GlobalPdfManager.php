@@ -7,6 +7,7 @@ use FluentForm\App\Helpers\Protector;
 use FluentForm\Framework\Helpers\ArrayHelper;
 use FluentForm\Framework\Foundation\Application;
 use FluentForm\App\Services\FormBuilder\ShortCodeParser;
+use FluentFormPdf\Classes\Report\ReportPdfGenerator;
 
 
 class GlobalPdfManager
@@ -60,6 +61,13 @@ class GlobalPdfManager
             return $processor::initiate($content, $entryId, $formData, $form);
         }, 10, 4);
 
+        add_filter('fluentform/will_return_html', function($isHtml, $provider){
+            if ($provider == 'pdfFeed') {
+                return true;
+            }
+            return $isHtml;
+        }, 10, 2);
+
         add_filter('fluentform/all_editor_shortcodes', [$this, 'pushShortCode'], 10, 2);
         add_filter(
             'fluentform/shortcode_parser_callback_pdf.download_link',
@@ -78,6 +86,13 @@ class GlobalPdfManager
         add_action('wp_ajax_fluentform_pdf_download', [$this, 'download']);
         add_action('wp_ajax_fluentform_pdf_download_public', [$this, 'downloadPublic']);
         add_action('wp_ajax_nopriv_fluentform_pdf_download_public', [$this, 'downloadPublic']);
+
+        // Report PDF Download endpoint
+        add_action('wp_ajax_fluentform_report_download_pdf', function () {
+            Acl::verify('fluentform_entries_viewer');
+            $pdfGenerator = new ReportPdfGenerator();
+            $pdfGenerator->generatePdf($this->app->request->all());
+        });
     }
 
     public function globalSettingMenu($setting)
@@ -303,9 +318,9 @@ class GlobalPdfManager
             ->first();
 
         $settings = json_decode($feed->value, true);
-        if (ArrayHelper::isTrue($settings, 'appearance.watermark_img_behind')) {
-            $settings['appearance']['watermark_img_behind'] = true;
-        }
+
+        $settings['appearance']['watermark_img_behind'] = ArrayHelper::isTrue($settings, 'appearance.watermark_img_behind');
+
         $templateName = ArrayHelper::get($settings, 'template_key');
 
         $templates = $this->getAvailableTemplates($form);
