@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Fluent Forms PDF Generator
+ * Plugin Name: Fluent PDF Generator
  * Plugin URI:  https://wpmanageninja.com/downloads/fluentform-pro-add-on/
- * Description: Download entries as pdf with multiple template.
+ * Description: Download and Email entries as pdf with multiple template for all Fluent Products.
  * Author: WPManageNinja LLC
  * Author URI:  https://wpmanageninja.com
- * Version: 1.1.11
+ * Version: 2.0.0
  * Text Domain: fluentforms-pdf
  * Domain Path: /assets/languages
  * License: GPLv2 or later
@@ -30,110 +30,70 @@
  */
 
 defined('ABSPATH') or die;
-define('FLUENTFORM_PDF_VERSION', '1.1.11');
-define('FLUENTFORM_PDF_PATH', plugin_dir_path(__FILE__));
-define('FLUENTFORM_PDF_URL', plugin_dir_url(__FILE__));
 
-if (!defined('FLUENTFORM_FRAMEWORK_UPGRADE')) {
-    define('FLUENTFORM_FRAMEWORK_UPGRADE', '4.3.22');
+// Guard against both PDF plugins being active
+if (defined('FLUENT_PDF')) {
+    add_action('admin_notices', function () {
+        printf(
+            '<div class="notice notice-warning"><p>%s</p></div>',
+            esc_html__('Both "Fluent Forms PDF Generator" and "Fluent PDF Generator" are active. Please deactivate one to avoid conflicts.', 'fluentforms-pdf')
+        );
+    });
+    return;
 }
 
-class FluentFormPdf
+// New constants (used by fluent-pdf codebase)
+define('FLUENT_PDF', true);
+define('FLUENT_PDF_VERSION', '2.0.0');
+define('FLUENT_PDF_PATH', plugin_dir_path(__FILE__));
+define('FLUENT_PDF_URL', plugin_dir_url(__FILE__));
+define('FLUENT_PDF_PRODUCTION', 'yes');
+
+// Backward-compat constants (WPPayForm, old FF core check these)
+define('FLUENTFORM_PDF_VERSION', FLUENT_PDF_VERSION);
+define('FLUENTFORM_PDF_PATH', FLUENT_PDF_PATH);
+define('FLUENTFORM_PDF_URL', FLUENT_PDF_URL);
+
+// Used by apply_filters_deprecated() in AvailableOptions and templates
+if (!defined('FLUENTPDF_FRAMEWORK_UPGRADE')) {
+    define('FLUENTPDF_FRAMEWORK_UPGRADE', '2.0.0');
+}
+
+require_once FLUENT_PDF_PATH . 'vendor/autoload.php';
+require_once FLUENT_PDF_PATH . 'API/Pdf.php';
+
+class FluentPdf
 {
     public function boot()
     {
-        if (!defined('FLUENTFORM')) {
-            return $this->injectDependency();
-        }
+        (new FluentPdf\Classes\AdminMenuHandler())->register();
+        (new FluentPdf\Classes\PdfBuilder())->register();
 
-        $this->includeFiles();
-
-        if (function_exists('wpFluentForm')) {
-            return $this->registerHooks(wpFluentForm());
-        }
-    }
-
-    protected function includeFiles()
-    {
-        require_once FLUENTFORM_PDF_PATH . 'Classes/Controller/AvailableOptions.php';
-        require_once FLUENTFORM_PDF_PATH . 'Classes/Controller/FontManager.php';
-        require_once FLUENTFORM_PDF_PATH . 'Classes/Controller/GlobalPdfManager.php';
-
-        require_once FLUENTFORM_PDF_PATH . 'Classes/Templates/TemplateManager.php';
-        require_once FLUENTFORM_PDF_PATH . 'Classes/Templates/GeneralTemplate.php';
-        require_once FLUENTFORM_PDF_PATH . 'Classes/Templates/InvoiceTemplate.php';
-        
-        require_once FLUENTFORM_PDF_PATH . 'Classes/Report/ReportPdfGenerator.php';
-    }
-
-    protected function registerHooks($fluentForm)
-    {
-        new \FluentFormPdf\Classes\Controller\GlobalPdfManager($fluentForm);
-    }
-
-
-    /**
-     * Notify the user about the FluentForm dependency and instructs to install it.
-     */
-    protected function injectDependency()
-    {
-        add_action('admin_notices', function () {
-            $pluginInfo = $this->getFluentFormInstallationDetails();
-
-            $class = 'notice notice-error';
-
-            $install_url_text = __('Click Here to Install the Plugin', 'fluentforms-pdf');
-
-            if ($pluginInfo->action == 'activate') {
-                $install_url_text = __('Click Here to Activate the Plugin', 'fluentforms-pdf');
-            }
-
-            $message = __('FluentForm pdf Add-On Requires Fluent Forms Plugin, ', 'fluentforms-pdf');
-            $message .= '<b><a href="' .$pluginInfo->url . '">' . $install_url_text . '</a></b>';
-
-            printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), wp_kses_post($message));
-        });
-    }
-
-    protected function getFluentFormInstallationDetails()
-    {
-        $activation = (object) [
-            'action' => 'install',
-            'url'    => ''
-        ];
-
-        $allPlugins = get_plugins();
-
-        if (isset($allPlugins['fluentform/fluentform.php'])) {
-            $url = wp_nonce_url(
-                self_admin_url('plugins.php?action=activate&plugin=fluentform/fluentform.php'),
-                'activate-plugin_fluentform/fluentform.php'
-            );
-
-            $activation->action = 'activate';
-        } else {
-            $api = (object) ['slug' => 'fluentform'];
-
-            $url = wp_nonce_url(
-                self_admin_url('update.php?action=install-plugin&plugin=' . $api->slug),
-                'install-plugin_' . $api->slug
-            );
-        }
-        $activation->url = $url;
-        return $activation;
+        do_action('fluent_pdf_loaded');
     }
 }
 
 add_action('plugins_loaded', function () {
-    (new FluentFormPdf())->boot();
+    (new FluentPdf())->boot();
+});
+
+// FluentForms integration
+add_action('plugins_loaded', function () {
+    if (!defined('FLUENTFORM') || !function_exists('wpFluentForm')) {
+        return;
+    }
+
+    (new FluentPdf\Modules\FluentForms\FluentFormsIntegration(wpFluentForm()))->register();
+}, 20);
+
+add_action('init', function () {
+    (new FluentPdf\Classes\Controller\GlobalFontManager())->registerAjax();
 });
 
 register_activation_hook(__FILE__, function () {
-    require_once FLUENTFORM_PDF_PATH . '/Classes/Controller/Activator.php';
-    \FluentFormPdf\Classes\Controller\Activator::activate();
+    FluentPdf\Classes\Controller\Activator::activate();
 });
 
-register_deactivation_hook( __FILE__, function () {
-    require_once FLUENTFORM_PDF_PATH . '/Classes/Controller/Activator.php';
-    \FluentFormPdf\Classes\Controller\Activator::deactivate();
+register_deactivation_hook(__FILE__, function () {
+    FluentPdf\Classes\Controller\Activator::deactivate();
 });

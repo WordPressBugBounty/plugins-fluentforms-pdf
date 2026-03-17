@@ -1,8 +1,10 @@
 <?php
 
-namespace FluentFormPdf\Classes\Controller;
+namespace FluentPdf\Classes\Controller;
 
-use FluentForm\Framework\Helpers\ArrayHelper as Arr;
+defined('ABSPATH') or die;
+
+use FluentPdf\Support\Arr;
 
 class AvailableOptions
 {
@@ -92,7 +94,7 @@ class AvailableOptions
             'entry_view' => 'I',
             'reverse_text' => 'no',
             'accent_color' => '#CCCCCC',
-            'filename' => 'fluentformpdf'
+            'filename' => 'fluentpdf'
         ];
     }
 
@@ -101,75 +103,75 @@ class AvailableOptions
         return [
             [
                 'key' => 'paper_size',
-                'label' => __('Paper size', 'fluentforms-pdf'),
+                'label' => 'Paper size',
                 'component' => 'dropdown',
                 'tab' => 'tab2',
-                'tips' => __('select a pdf paper size', 'fluentforms-pdf'),
+                'tips' => 'select a pdf paper size',
                 'options' => self::getPaperSizes()
             ],
             [
                 'key' => 'orientation',
-                'label' => __('Orientation', 'fluentforms-pdf'),
+                'label' => 'Orientation',
                 'tab' => 'tab2',
                 'component' => 'dropdown',
                 'options' => self::getOrientations()
             ],
             [
                 'key' => 'font',
-                'label' => __('Font family', 'fluentforms-pdf'),
+                'label' => 'Font family',
                 'component' => 'dropdown',
                 'tab' => 'tab2',
                 'options' => self::getFonts()
             ],
             [
                 'key' => 'font_size',
-                'label' => __('Font size', 'fluentforms-pdf'),
+                'label' => 'Font size',
                 'tab' => 'tab2',
                 'component' => 'number'
             ],
             [
                 'key' => 'font_color',
-                'label' => __('Font color', 'fluentforms-pdf'),
+                'label' => 'Font color',
                 'tab' => 'tab2',
-                'tips' => __('The font color will use in the PDF.', 'fluentforms-pdf'),
+                'tips' => 'The font color will use in the PDF.',
                 'component' => 'color_picker'
             ],
             [
                 'key' => 'accent_color',
-                'label' => __('Accent color', 'fluentforms-pdf'),
+                'label' => 'Accent color',
                 'tab' => 'tab2',
-                'tips' => __('The accent color is used for the page, section titles and the border.', 'fluentforms-pdf'),
+                'tips' => 'The accent color is used for the page, section titles and the border.',
                 'component' => 'color_picker'
             ],
             [
                 'key' => 'entry_view',
-                'label' => __('Entry view', 'fluentforms-pdf'),
+                'label' => 'Entry view',
                 'tab' => 'tab2',
                 'component' => 'radio_choice',
                 'options' => [
-                    'I' => __('View', 'fluentforms-pdf'),
-                    'D' => __('Download', 'fluentforms-pdf')
+                    'I' => 'View',
+                    'D' => 'Download'
                 ]
             ],
             [
                 'key' => 'empty_fields',
-                'label' => __('Show empty fields', 'fluentforms-pdf'),
+                'label' => 'Show empty fields',
                 'tab' => 'tab2',
                 'component' => 'radio_choice',
                 'options' => [
-                    'yes' => __('Yes', 'fluentforms-pdf'),
-                    'no' => __('No', 'fluentforms-pdf')
+                    'yes' => 'Yes',
+                    'no' => 'No'
                 ]
             ],
             [
                 'key' => 'reverse_text',
-                'label' => __('Reverse text', 'fluentforms-pdf'),
+                'label' => 'Reverse text',
                 'tab' => 'tab2',
-                'tips' => __('Script like Arabic and Hebrew are written right to left.', 'fluentforms-pdf'),
+                'tips' => 'Script like Arabic and Hebrew are written right to left.',
                 'component' => 'radio_choice',
                 'options' => [
-                    'yes' => __('Yes', 'fluentforms-pdf'),
-                    'no' => __('No', 'fluentforms-pdf')
+                    'yes' => 'Yes',
+                    'no' => 'No'
                 ]
             ]
         ];
@@ -207,59 +209,59 @@ class AvailableOptions
         $workingPath = wp_upload_dir()['basedir'];
 
         $workingDir = apply_filters_deprecated(
-            'fluentform_pdf_working_dir',
+            'fluent_pdf_working_dir',
             [
                 $workingPath . '/FLUENT_PDF_TEMPLATES'
             ],
-            FLUENTFORM_FRAMEWORK_UPGRADE,
-            'fluentform/pdf_working_dir',
-            'Use fluentform/pdf_working_dir instead of fluentform_pdf_working_dir.'
+            FLUENTPDF_FRAMEWORK_UPGRADE,
+            'fluent/pdf_working_dir',
+            'Use fluent/pdf_working_dir instead of fluent_pdf_working_dir.'
         );
 
-        $workingDir = apply_filters('fluentform/pdf_working_dir', $workingPath . '/FLUENT_PDF_TEMPLATES');
+        $workingDir = apply_filters('fluent/pdf_working_dir', $workingPath . '/FLUENT_PDF_TEMPLATES');
 
         $tmpDir = apply_filters_deprecated(
-            'fluentform_pdf_temp_dir',
+            'fluent_pdf_temp_dir',
             [
                 $workingDir . '/temp'
             ],
-            FLUENTFORM_FRAMEWORK_UPGRADE,
-            'fluentform/pdf_temp_dir',
-            'Use fluentform/pdf_temp_dir instead of fluentform_pdf_temp_dir.'
+            FLUENTPDF_FRAMEWORK_UPGRADE,
+            'fluent/pdf_temp_dir',
+            'Use fluent/pdf_temp_dir instead of fluent_pdf_temp_dir.'
         );
 
-        $tmpDir = apply_filters('fluentform/pdf_temp_dir', $workingDir . '/temp');
+        $tmpDir = apply_filters('fluent/pdf_temp_dir', $workingDir . '/temp');
 
         $cacheDir = apply_filters_deprecated(
-            'fluentform_pdf_cache_dir',
+            'fluent_pdf_cache_dir',
             [
                 $workingDir . '/pdfCache'
             ],
-            FLUENTFORM_FRAMEWORK_UPGRADE,
-            'fluentform/pdf_cache_dir',
-            'Use fluentform/pdf_cache_dir instead of fluentform_pdf_cache_dir.'
+            FLUENTPDF_FRAMEWORK_UPGRADE,
+            'fluent/pdf_cache_dir',
+            'Use fluent/pdf_cache_dir instead of fluent_pdf_cache_dir.'
         );
 
-        $cacheDir = apply_filters('fluentform/pdf_cache_dir', $workingDir . '/pdfCache');
+        $cacheDir = apply_filters('fluent/pdf_cache_dir', $workingDir . '/pdfCache');
 
         $fontDir = apply_filters_deprecated(
-            'fluentform_pdf_font_dir',
+            'fluent_pdf_font_dir',
             [
                 $workingDir . '/fonts'
             ],
-            FLUENTFORM_FRAMEWORK_UPGRADE,
-            'fluentform/pdf_font_dir',
-            'Use fluentform/pdf_font_dir instead of fluentform_pdf_font_dir.'
+            FLUENTPDF_FRAMEWORK_UPGRADE,
+            'fluent/pdf_font_dir',
+            'Use fluent/pdf_font_dir instead of fluent_pdf_font_dir.'
         );
 
-        $fontDir = apply_filters('fluentform/pdf_font_dir', $workingDir . '/fonts');
+        $fontDir = apply_filters('fluent/pdf_font_dir', $workingDir . '/fonts');
 
 
         return [
             'workingDir' => $workingDir,
-            'tempDir' => apply_filters('fluentform/pdf_temp_dir', $workingDir . '/temp'),
-            'pdfCacheDir' => apply_filters('fluentform/pdf_cache_dir', $workingDir . '/pdfCache'),
-            'fontDir' => apply_filters('fluentform/pdf_font_dir', $workingDir . '/fonts')
+            'tempDir' => apply_filters('fluent/pdf_temp_dir', $workingDir . '/temp'),
+            'pdfCacheDir' => apply_filters('fluent/pdf_cache_dir', $workingDir . '/pdfCache'),
+            'fontDir' => apply_filters('fluent/pdf_font_dir', $workingDir . '/fonts')
         ];
     }
 
@@ -272,24 +274,30 @@ class AvailableOptions
                 'dejavuserifcondensed' => 'Dejavu Serif Condensed',
                 'dejavuserif' => 'Dejavu Serif',
                 'dejavusansmono' => 'Dejavu Sans Mono',
+
                 'freesans' => 'Free Sans',
                 'freeserif' => 'Free Serif',
                 'freemono' => 'Free Mono',
+
                 'mph2bdamase' => 'MPH 2B Damase',
             ],
+
             'Indic' => [
                 'lohitkannada' => 'Lohit Kannada',
                 'pothana2000' => 'Pothana2000',
             ],
+
             'Arabic' => [
                 'xbriyaz' => 'XB Riyaz',
                 'lateef' => 'Lateef',
                 'kfgqpcuthmantahanaskh' => 'Bahif Uthman Taha',
             ],
+
             'Chinese, Japanese, Korean' => [
                 'sun-exta' => 'Sun Ext',
                 'unbatang' => 'Un Batang (Korean)',
             ],
+
             'Other' => [
                 'estrangeloedessa' => 'Estrangelo Edessa (Syriac)',
                 'kaputaunicode' => 'Kaputa (Sinhala)',
@@ -317,15 +325,17 @@ class AvailableOptions
         ];
 
         $fontList = apply_filters_deprecated(
-            'fluentform_pdf_font_list',
+            'fluent_pdf_font_list',
             [
                 $fonts
             ],
-            FLUENTFORM_FRAMEWORK_UPGRADE,
-            'fluentform/pdf_font_list',
-            'Use fluentform/pdf_font_list instead of fluentform_pdf_font_list.'
+            FLUENTPDF_FRAMEWORK_UPGRADE,
+            'fluent/pdf_font_list',
+            'Use fluent/pdf_font_list instead of fluent_pdf_font_list.'
         );
 
-        return apply_filters('fluentform/pdf_font_list', $fonts);
+        $fontList = apply_filters('fluent/pdf_font_list', $fonts);
+
+        return $fontList;
     }
 }

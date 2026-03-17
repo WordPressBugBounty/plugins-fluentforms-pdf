@@ -1,10 +1,10 @@
-=== Fluent Forms PDF Generator ===
+=== Fluent PDF Generator ===
 Contributors: techjewel,adreastrian,heera,wpmanageninja,hasanuzzamanshamim
 Tags: PDF, Form To PDF, attachment, fluent forms
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.11
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,15 @@ You can also send these PDF files via emails to your users and make them passwor
 
 
 == Changelog ==
+
+= 2.0.0 - March 17, 2026 =
+* Major: Rebuilt on the new fluent-pdf codebase
+* Added new admin UI with global font manager
+* Added automatic migration of settings from previous versions
+* Added graceful error handling for missing fonts
+* Added plugin coexistence detection with fluent-pdf
+* Updated compatibility with WordPress 6.8
+* Updated minimum PHP requirement to 7.4
 
 = 1.1.11 - Nov 27, 2025 =
 - Fix plugin check reported issues
