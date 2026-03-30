@@ -43,7 +43,7 @@ class Vite
     {
         if (in_array($handle, (static::$instance)->moduleScripts)) {
             if (static::isDevMode()) {
-                throw new \Exception('This handel Has been used');
+                throw new \Exception('This handle has been used');
             }
             return;
         }
@@ -102,8 +102,7 @@ class Vite
         if (!file_exists($manifestPath)) {
             throw new \Exception('Vite Manifest Not Found. Run : npm run dev or npm run prod');
         }
-        $manifestFile = fopen($manifestPath, "r");
-        $manifestData = fread($manifestFile, filesize($manifestPath));
+        $manifestData = file_get_contents($manifestPath);
         (static::$instance)->manifestData = json_decode($manifestData, true);
     }
 

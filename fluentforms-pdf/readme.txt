@@ -4,7 +4,7 @@ Tags: PDF, Form To PDF, attachment, fluent forms
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,7 +42,13 @@ You can also send these PDF files via emails to your users and make them passwor
 
 == Changelog ==
 
-= 2.0.0 - March 17, 2026 =
+= 2.1.0 - March 30, 2026 =
+* Security: Hardened access controls, input sanitization, admin capability checks, and output escaping across all endpoints
+* Improved scoped mPDF vendor namespace to prevent conflicts with other plugins
+* Improved Updated mPDF library for PHP 8.1-8.4 compatibility
+* Improved error handling when mPDF fonts are missing
+
+= 2.0.0 - March 16, 2026 =
 * Major: Rebuilt on the new fluent-pdf codebase
 * Added new admin UI with global font manager
 * Added automatic migration of settings from previous versions

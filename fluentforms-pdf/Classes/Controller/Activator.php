@@ -44,6 +44,12 @@ class Activator
         if (!is_file($dirs['workingDir'] . '/.htaccess')) {
             file_put_contents($dirs['workingDir'] . '/.htaccess', 'deny from all');
         }
+
+        foreach ($folders as $dir) {
+            if (is_dir($dir) && !is_file($dir . '/index.html')) {
+                file_put_contents($dir . '/index.html', '');
+            }
+        }
     }
 
 

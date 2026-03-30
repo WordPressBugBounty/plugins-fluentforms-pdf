@@ -79,6 +79,9 @@ class GeneralTemplate extends TemplateManager
         $htmlBody = $settings['body'];
 
         $form = wpFluent()->table('fluentform_forms')->find($submission->form_id);
+        if (!$form) {
+            return '';
+        }
 
         $htmlBody = apply_filters_deprecated(
             'ff_pdf_body_parse',

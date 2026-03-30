@@ -21,16 +21,16 @@ class GlobalFontManager
         $maps = [
             'get_global_settings' => 'getGlobalSettingsAjax',
             'save_global_settings' => 'saveGlobalSettings',
-            'download_pdf' => 'getPdf',
             'downloadFonts' => 'downloadFonts',
-            
         ];
 
-        $route = sanitize_text_field($_REQUEST['route']);
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => __('You do not have permission to perform this action', 'fluent-pdf')], 403);
+        }
 
-        // Acl::verify('fluent_forms_manager');
+        $route = isset($_REQUEST['route']) ? sanitize_text_field(wp_unslash($_REQUEST['route'])) : '';
 
-        if (isset($maps[$route])) {
+        if ($route && isset($maps[$route])) {
             $this->{$maps[$route]}();
         }
     }

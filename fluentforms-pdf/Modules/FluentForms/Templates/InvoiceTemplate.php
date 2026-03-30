@@ -104,6 +104,9 @@ class InvoiceTemplate extends TemplateManager
         $htmlBody = str_replace('{page_break}', '<page_break />', $htmlBody);
 
         $form = wpFluent()->table('fluentform_forms')->find($submission->form_id);
+        if (!$form) {
+            return '';
+        }
 
         $htmlBody = apply_filters_deprecated(
             'ff_pdf_body_parse',
@@ -160,7 +163,7 @@ class InvoiceTemplate extends TemplateManager
 
                     <div class="heading_items">
                         <div class="order_number"><b><?php esc_html_e('Order Number:', 'fluent-pdf'); ?></b> <?php echo fluentform_sanitize_html($submission->id); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
-                        <div class="payment_date"><b><?php esc_html_e('Payment Date:', 'fluent-pdf'); ?></b> <?php echo fluentform_sanitize_html(date(get_option('date_format'), strtotime($submission->created_at))); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date, WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+                        <div class="payment_date"><b><?php esc_html_e('Payment Date:', 'fluent-pdf'); ?></b> <?php echo fluentform_sanitize_html(wp_date(get_option('date_format'), strtotime($submission->created_at))); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date, WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
                         <br />
                         <div class="customer_details">
                             <?php if (Arr::get($settings, 'customer_name') || Arr::get($settings, 'customer_address') || Arr::get($settings, 'customer_email')): ?>

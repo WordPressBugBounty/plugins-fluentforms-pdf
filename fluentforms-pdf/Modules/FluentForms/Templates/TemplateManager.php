@@ -68,7 +68,7 @@ abstract class TemplateManager
         $defaults = [
             'fontDir'                => [
                 $this->fontDir,
-                FLUENT_PDF_PATH . 'vendor/mpdf/mpdf/ttfonts',
+                FLUENT_PDF_PATH . 'vendor-prefixed/mpdf/mpdf/ttfonts',
             ],
             'tempDir'                => $this->tempDir,
             'curlCaCertificate'      => ABSPATH . WPINC . '/certificates/ca-bundle.crt',
@@ -100,13 +100,16 @@ abstract class TemplateManager
 
         $mpdfConfig = apply_filters('fluentform/mpdf_config', $mpdfConfig);
 
-        if (!class_exists('\Mpdf\Mpdf')) {
+        if (!class_exists('\FluentPdf\Vendor\Mpdf\Mpdf')) {
             require_once FLUENT_PDF_PATH . 'vendor/autoload.php';
         }
 
         try {
-            return new \Mpdf\Mpdf($mpdfConfig);
-        } catch (\Mpdf\MpdfException $e) {
+            return new \FluentPdf\Vendor\Mpdf\Mpdf($mpdfConfig);
+        } catch (\FluentPdf\Vendor\Mpdf\MpdfException $e) {
+            if (wp_doing_ajax() || defined('DOING_CRON')) {
+                return null;
+            }
             $settingsUrl = admin_url('admin.php?page=fluent_forms_add_ons&sub_page=fluentform_pdf');
             wp_die(
                 '<h2>' . esc_html__('Fluent PDF - Font Error', 'fluent-pdf') . '</h2>'
@@ -143,6 +146,11 @@ abstract class TemplateManager
         }
 
         $pdfGenerator = $this->getGenerator($mpdfConfig);
+
+        if (!$pdfGenerator) {
+            return '';
+        }
+
         if (ArrayHelper::get($appearance, 'security_pass')) {
             $password = ArrayHelper::get($appearance, 'security_pass');
             $pdfGenerator->SetProtection([], $password, $password);
@@ -190,7 +198,7 @@ abstract class TemplateManager
         $footer = $this->applyInlineCssStyles($footer, $appearance);
 
         $pdfGenerator->SetHTMLFooter($footer);
-        $pdfGenerator->WriteHTML('<div class="ff_pdf_wrapper">' . $body . '</div>', \Mpdf\HTMLParserMode::HTML_BODY);
+        $pdfGenerator->WriteHTML('<div class="ff_pdf_wrapper">' . $body . '</div>', \FluentPdf\Vendor\Mpdf\HTMLParserMode::HTML_BODY);
 
         if ($outPut == 'S') {
             return $pdfGenerator->Output($fileName . '.pdf', $outPut);

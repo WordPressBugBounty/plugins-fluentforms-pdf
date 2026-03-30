@@ -60,7 +60,7 @@ class AdminMenuHandler
         $fluentPdfVars = apply_filters('fluent-pdf/admin_app_vars', array(
             'assets_url' => FLUENT_PDF_URL . 'assets/',
             'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('fluent_pdf_nonce'),
+            'nonce' => wp_create_nonce('fluent_pdf_admin_nonce'),
         ));
 
         wp_localize_script('fluent-pdf-script-boot', 'fluent_pdf_admin', $fluentPdfVars);

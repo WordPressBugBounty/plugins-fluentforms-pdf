@@ -4,8 +4,6 @@ namespace FluentPdf\Classes\Controller;
 
 defined('ABSPATH') or die;
 
-use FluentPdf\Support\Arr;
-
 class AvailableOptions
 {
     public static function getPaperSizes()
@@ -82,127 +80,13 @@ class AvailableOptions
         ];
     }
 
-    public static function getDefaultSettings()
-    {
-        return [
-            'font_size' => '16',
-            "paper_size" => 'A4',
-            'template' => 'blank',
-            'orientation' => 'P',
-            'font' => 'default',
-            'font_color' => '#000000',
-            'entry_view' => 'I',
-            'reverse_text' => 'no',
-            'accent_color' => '#CCCCCC',
-            'filename' => 'fluentpdf'
-        ];
-    }
-
-    public static function commonSettings()
-    {
-        return [
-            [
-                'key' => 'paper_size',
-                'label' => 'Paper size',
-                'component' => 'dropdown',
-                'tab' => 'tab2',
-                'tips' => 'select a pdf paper size',
-                'options' => self::getPaperSizes()
-            ],
-            [
-                'key' => 'orientation',
-                'label' => 'Orientation',
-                'tab' => 'tab2',
-                'component' => 'dropdown',
-                'options' => self::getOrientations()
-            ],
-            [
-                'key' => 'font',
-                'label' => 'Font family',
-                'component' => 'dropdown',
-                'tab' => 'tab2',
-                'options' => self::getFonts()
-            ],
-            [
-                'key' => 'font_size',
-                'label' => 'Font size',
-                'tab' => 'tab2',
-                'component' => 'number'
-            ],
-            [
-                'key' => 'font_color',
-                'label' => 'Font color',
-                'tab' => 'tab2',
-                'tips' => 'The font color will use in the PDF.',
-                'component' => 'color_picker'
-            ],
-            [
-                'key' => 'accent_color',
-                'label' => 'Accent color',
-                'tab' => 'tab2',
-                'tips' => 'The accent color is used for the page, section titles and the border.',
-                'component' => 'color_picker'
-            ],
-            [
-                'key' => 'entry_view',
-                'label' => 'Entry view',
-                'tab' => 'tab2',
-                'component' => 'radio_choice',
-                'options' => [
-                    'I' => 'View',
-                    'D' => 'Download'
-                ]
-            ],
-            [
-                'key' => 'empty_fields',
-                'label' => 'Show empty fields',
-                'tab' => 'tab2',
-                'component' => 'radio_choice',
-                'options' => [
-                    'yes' => 'Yes',
-                    'no' => 'No'
-                ]
-            ],
-            [
-                'key' => 'reverse_text',
-                'label' => 'Reverse text',
-                'tab' => 'tab2',
-                'tips' => 'Script like Arabic and Hebrew are written right to left.',
-                'component' => 'radio_choice',
-                'options' => [
-                    'yes' => 'Yes',
-                    'no' => 'No'
-                ]
-            ]
-        ];
-    }
-
-    public static function slugify($string)
-    {
-        return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string), '-'));
-    }
-
-    public static function getPreferences($settings, $default)
-    {
-        $color = Arr::get($settings, 'font_color');
-        $accent = Arr::get($settings, 'accent_color');
-        if ($color == '' || null) {
-            $color = Arr::get($default, 'font_color');
-        }
-        if ($accent == '' || null) {
-            $accent = Arr::get($default, 'accent_color');
-        }
-
-        return [
-            'color' => $color,
-            'accent' => $accent,
-            'font' => Arr::get($settings, 'font', Arr::get($default, 'font')),
-            'fontSize' => Arr::get($settings, 'font_size', Arr::get($default, 'font_size'))
-        ];
-    }
-
     public static function getDirStructure()
     {
+        static $cached = null;
+        if ($cached !== null) {
+            return $cached;
+        }
+
         /*
          * Todo: Need a fix for multi-site network
          */
@@ -218,7 +102,7 @@ class AvailableOptions
             'Use fluent/pdf_working_dir instead of fluent_pdf_working_dir.'
         );
 
-        $workingDir = apply_filters('fluent/pdf_working_dir', $workingPath . '/FLUENT_PDF_TEMPLATES');
+        $workingDir = apply_filters('fluent/pdf_working_dir', $workingDir);
 
         $tmpDir = apply_filters_deprecated(
             'fluent_pdf_temp_dir',
@@ -230,7 +114,7 @@ class AvailableOptions
             'Use fluent/pdf_temp_dir instead of fluent_pdf_temp_dir.'
         );
 
-        $tmpDir = apply_filters('fluent/pdf_temp_dir', $workingDir . '/temp');
+        $tmpDir = apply_filters('fluent/pdf_temp_dir', $tmpDir);
 
         $cacheDir = apply_filters_deprecated(
             'fluent_pdf_cache_dir',
@@ -242,7 +126,7 @@ class AvailableOptions
             'Use fluent/pdf_cache_dir instead of fluent_pdf_cache_dir.'
         );
 
-        $cacheDir = apply_filters('fluent/pdf_cache_dir', $workingDir . '/pdfCache');
+        $cacheDir = apply_filters('fluent/pdf_cache_dir', $cacheDir);
 
         $fontDir = apply_filters_deprecated(
             'fluent_pdf_font_dir',
@@ -254,15 +138,16 @@ class AvailableOptions
             'Use fluent/pdf_font_dir instead of fluent_pdf_font_dir.'
         );
 
-        $fontDir = apply_filters('fluent/pdf_font_dir', $workingDir . '/fonts');
+        $fontDir = apply_filters('fluent/pdf_font_dir', $fontDir);
 
-
-        return [
+        $cached = [
             'workingDir' => $workingDir,
-            'tempDir' => apply_filters('fluent/pdf_temp_dir', $workingDir . '/temp'),
-            'pdfCacheDir' => apply_filters('fluent/pdf_cache_dir', $workingDir . '/pdfCache'),
-            'fontDir' => apply_filters('fluent/pdf_font_dir', $workingDir . '/fonts')
+            'tempDir' => $tmpDir,
+            'pdfCacheDir' => $cacheDir,
+            'fontDir' => $fontDir
         ];
+
+        return $cached;
     }
 
     public static function getInstalledFonts()
@@ -334,7 +219,7 @@ class AvailableOptions
             'Use fluent/pdf_font_list instead of fluent_pdf_font_list.'
         );
 
-        $fontList = apply_filters('fluent/pdf_font_list', $fonts);
+        $fontList = apply_filters('fluent/pdf_font_list', $fontList);
 
         return $fontList;
     }

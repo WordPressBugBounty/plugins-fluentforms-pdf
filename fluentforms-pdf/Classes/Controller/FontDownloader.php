@@ -11,8 +11,15 @@ class FontDownloader
 
     public function getCoreFonts()
     {
-        $json = file_get_contents(FLUENT_PDF_PATH.'/core-fonts.json');
-        return json_decode($json, true);
+        $filePath = FLUENT_PDF_PATH . '/core-fonts.json';
+        if (!file_exists($filePath)) {
+            return [];
+        }
+
+        $json = file_get_contents($filePath);
+        $decoded = json_decode($json, true);
+
+        return is_array($decoded) ? $decoded : [];
     }
 
     public function getDownloadableFonts($limit = 0)

@@ -49,12 +49,6 @@ class FluentFormsIntegration
         add_filter('fluentform/global_settings_components', [$this, 'globalSettingMenu']);
         add_filter('fluentform/form_settings_menu', [$this, 'formSettingsMenu']);
 
-        // Single form pdf settings fields ajax
-        add_action(
-            'wp_ajax_fluentform_get_form_pdf_template_settings',
-            [$this, 'getFormTemplateSettings']
-        );
-
         add_action('wp_ajax_fluentform_pdf_admin_ajax_actions', [$this, 'ajaxRoutes']);
 
         add_filter('fluentform/submissions_widgets', [$this, 'pushPdfButtons'], 10, 3);
@@ -143,11 +137,6 @@ class FluentFormsIntegration
         ];
 
         return $settingsMenus;
-    }
-
-    public function getFormTemplateSettings()
-    {
-        // placeholder for form template settings AJAX
     }
 
     public function ajaxRoutes()
@@ -244,6 +233,12 @@ class FluentFormsIntegration
         $form = wpFluent()->table('fluentform_forms')
             ->where('id', $formId)
             ->first();
+
+        if (!$form) {
+            wp_send_json_error([
+                'message' => __('Sorry! No form found!', 'fluentforms-pdf'),
+            ], 423);
+        }
 
         $feeds = $this->getFeeds($form->id);
 
@@ -352,6 +347,9 @@ class FluentFormsIntegration
         $formattedFeeds = [];
         foreach ($feeds as $feed) {
             $settings = json_decode($feed->value, true);
+            if (!is_array($settings)) {
+                continue;
+            }
             $settings['id'] = $feed->id;
             $formattedFeeds[] = $settings;
         }
@@ -387,6 +385,11 @@ class FluentFormsIntegration
             ->first();
 
         $settings = json_decode($feed->value, true);
+        if (!is_array($settings)) {
+            wp_send_json_error([
+                'message' => __('Sorry! Invalid feed data', 'fluentforms-pdf'),
+            ], 423);
+        }
 
         $settings['appearance']['watermark_img_behind'] = ArrayHelper::isTrue($settings, 'appearance.watermark_img_behind');
 
@@ -520,6 +523,8 @@ class FluentFormsIntegration
 
         wpFluent()->table('fluentform_form_meta')
             ->where('id', $feedId)
+            ->where('form_id', $formId)
+            ->where('meta_key', '_pdf_feeds')
             ->update([
                 'value' => wp_json_encode($feed),
             ]);
@@ -539,8 +544,12 @@ class FluentFormsIntegration
             ], 423);
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verified previously
+        $formId = isset($_REQUEST['form_id']) ? intval($_REQUEST['form_id']) : 0;
+
         wpFluent()->table('fluentform_form_meta')
             ->where('id', $feedId)
+            ->where('form_id', $formId)
             ->where('meta_key', '_pdf_feeds')
             ->delete();
 
@@ -706,7 +715,9 @@ class FluentFormsIntegration
         $submissionId = isset($_REQUEST['submission_id']) ? intval($_REQUEST['submission_id']) : 0;
 
         if (!$feedId || !$submissionId) {
-            die(esc_html__('Sorry! No feed found', 'fluent-pdf'));
+            wp_send_json_error([
+                'message' => __('Sorry! No feed found', 'fluentforms-pdf'),
+            ], 404);
         }
 
         $feed = wpFluent()->table('fluentform_form_meta')
@@ -714,25 +725,58 @@ class FluentFormsIntegration
             ->where('meta_key', '_pdf_feeds')
             ->first();
 
+        if (!$feed) {
+            wp_send_json_error([
+                'message' => __('Sorry! No feed found', 'fluentforms-pdf'),
+            ], 404);
+        }
+
         $settings = json_decode($feed->value, true);
+        if (!is_array($settings)) {
+            wp_send_json_error([
+                'message' => __('Sorry! Invalid feed data', 'fluentforms-pdf'),
+            ], 422);
+        }
         $settings['id'] = $feed->id;
 
         $form = wpFluent()->table('fluentform_forms')
             ->where('id', $feed->form_id)
             ->first();
 
+        if (!$form) {
+            wp_send_json_error([
+                'message' => __('Sorry! No form found', 'fluentforms-pdf'),
+            ], 404);
+        }
+
+        // Verify submission belongs to the feed's form
+        $submission = wpFluent()->table('fluentform_submissions')
+            ->select(['id', 'form_id'])
+            ->where('id', $submissionId)
+            ->first();
+
+        if (!$submission || intval($submission->form_id) !== intval($feed->form_id)) {
+            wp_send_json_error([
+                'message' => __('Sorry! Submission does not belong to this form', 'fluentforms-pdf'),
+            ], 422);
+        }
+
         $templateName = ArrayHelper::get($settings, 'template_key');
         $templates = $this->getAvailableTemplates($form);
 
         if (!isset($templates[$templateName])) {
-            die(esc_html__('Sorry! No template found', 'fluent-pdf'));
+            wp_send_json_error([
+                'message' => __('Sorry! No template found', 'fluentforms-pdf'),
+            ], 422);
         }
 
         $template = $templates[$templateName];
 
         $class = $template['class'];
         if (!class_exists($class)) {
-            die(esc_html__('Sorry! No template class found', 'fluent-pdf'));
+            wp_send_json_error([
+                'message' => __('Sorry! No template class found', 'fluentforms-pdf'),
+            ], 422);
         }
 
         $instance = new $class($this->app);
@@ -757,6 +801,9 @@ class FluentFormsIntegration
 
         foreach ($feeds as $feed) {
             $settings = json_decode($feed->value, true);
+            if (!is_array($settings)) {
+                continue;
+            }
             $settings['id'] = $feed->id;
             $templateName = ArrayHelper::get($settings, 'template_key');
 
@@ -846,9 +893,12 @@ class FluentFormsIntegration
         ];
 
         foreach ($feeds as $feed) {
-            $feedSettings = json_decode($feed->value);
+            $feedSettings = json_decode($feed->value, true);
+            if (!is_array($feedSettings)) {
+                continue;
+            }
             $key = '{pdf.download_link.' . $feed->id . '}';
-            $feedShortCodes[$key] = $feedSettings->name . ' feed PDF link';
+            $feedShortCodes[$key] = $feedSettings['name'] . ' feed PDF link';
         }
 
         $shortCodes[] = [
@@ -912,6 +962,27 @@ class FluentFormsIntegration
             }
         }
 
+        // For non-admin users (form submitters), check allow_download on the feed
+        if (!$hasPermission) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verified previously
+            $feedId = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+            if ($feedId) {
+                $feed = wpFluent()->table('fluentform_form_meta')
+                    ->where('id', $feedId)
+                    ->where('meta_key', '_pdf_feeds')
+                    ->first();
+
+                if ($feed) {
+                    $feedSettings = json_decode($feed->value, true);
+                    if (!ArrayHelper::isTrue($feedSettings, 'settings.allow_download')) {
+                        wp_send_json_error([
+                            'message' => __('Download is not enabled for this PDF.', 'fluent-pdf'),
+                        ], 422);
+                    }
+                }
+            }
+        }
+
         return $this->getPdf();
     }
 
@@ -940,6 +1011,24 @@ class FluentFormsIntegration
         $feedId = isset($_REQUEST['id']) ? intval(Protector::decrypt(base64_decode($_REQUEST['id']))) : 0;
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $submissionId = isset($_REQUEST['submission_id']) ? intval(Protector::decrypt(base64_decode($_REQUEST['submission_id']))) : 0;
+
+        if (!$feedId || !$submissionId) {
+            die(esc_html__('Sorry! Invalid download link', 'fluent-pdf'));
+        }
+
+        $feed = wpFluent()->table('fluentform_form_meta')
+            ->where('id', $feedId)
+            ->where('meta_key', '_pdf_feeds')
+            ->first();
+
+        if (!$feed) {
+            die(esc_html__('Sorry! No feed found', 'fluent-pdf'));
+        }
+
+        $feedSettings = json_decode($feed->value, true);
+        if (!ArrayHelper::isTrue($feedSettings, 'settings.allow_download')) {
+            die(esc_html__('Sorry! Download is not enabled for this PDF', 'fluent-pdf'));
+        }
 
         $_REQUEST['id'] = $feedId;
         $_REQUEST['submission_id'] = $submissionId;

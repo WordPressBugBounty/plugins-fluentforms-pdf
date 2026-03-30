@@ -15,7 +15,7 @@ class Pdf
 
     public function __construct($config = [])
     {
-        // $this->mpdf = new \Mpdf\Mpdf($config);
+        // $this->mpdf = new \FluentPdf\Vendor\Mpdf\Mpdf($config);
     }
 
     /**
@@ -44,7 +44,7 @@ class Pdf
 
     public function setBody($body)
     {
-        $this->mpdf->WriteHTML($body, \Mpdf\HTMLParserMode::HTML_BODY);
+        $this->mpdf->WriteHTML($body, \FluentPdf\Vendor\Mpdf\HTMLParserMode::HTML_BODY);
         return $this->mpdf;
     }
 
@@ -82,7 +82,7 @@ class Pdf
      */
     public function download($filename = 'document.pdf')
     {
-        return $this->mpdf->Output($filename, \Mpdf\Output\Destination::DOWNLOAD);
+        return $this->mpdf->Output($filename, \FluentPdf\Vendor\Mpdf\Output\Destination::DOWNLOAD);
     }
 
     /**
@@ -90,7 +90,7 @@ class Pdf
      */
     public function show($filename = 'document.pdf')
     {
-        return $this->mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
+        return $this->mpdf->Output($filename, \FluentPdf\Vendor\Mpdf\Output\Destination::INLINE);
     }
 
 
@@ -99,7 +99,7 @@ class Pdf
     */
     public function stream($filename = 'document.pdf')
     {
-        return $this->mpdf->Output($filename, \Mpdf\Output\Destination::FILE);
+        return $this->mpdf->Output($filename, \FluentPdf\Vendor\Mpdf\Output\Destination::FILE);
     }
 
         /**
@@ -107,7 +107,7 @@ class Pdf
     */
     public function asString($filename = 'document.pdf')
     {
-        return $this->mpdf->Output($filename, \Mpdf\Output\Destination::STRING_RETURN);
+        return $this->mpdf->Output($filename, \FluentPdf\Vendor\Mpdf\Output\Destination::STRING_RETURN);
     }
 
 
