@@ -223,4 +223,103 @@ class AvailableOptions
 
         return $fontList;
     }
+
+    /**
+     * Maps each mPDF font key to the primary (Regular) font filename on disk.
+     */
+    private static function getFontFileMap()
+    {
+        return [
+            'dejavusanscondensed'   => 'DejaVuSansCondensed.ttf',
+            'dejavusans'            => 'DejaVuSans.ttf',
+            'dejavuserifcondensed'  => 'DejaVuSerifCondensed.ttf',
+            'dejavuserif'           => 'DejaVuSerif.ttf',
+            'dejavusansmono'        => 'DejaVuSansMono.ttf',
+            'freesans'              => 'FreeSans.ttf',
+            'freeserif'             => 'FreeSerif.ttf',
+            'freemono'              => 'FreeMono.ttf',
+            'mph2bdamase'           => 'damase_v.2.ttf',
+            'lohitkannada'          => 'Lohit-Kannada.ttf',
+            'pothana2000'           => 'Pothana2000.ttf',
+            'xbriyaz'               => 'XB Riyaz.ttf',
+            'lateef'                => 'LateefRegOT.ttf',
+            'kfgqpcuthmantahanaskh' => 'Uthman.otf',
+            'sun-exta'              => 'Sun-ExtA.ttf',
+            'unbatang'              => 'UnBatang_0613.ttf',
+            'estrangeloedessa'      => 'SyrCOMEdessa.otf',
+            'kaputaunicode'         => 'kaputaunicode.ttf',
+            'abyssinicasil'         => 'Abyssinica_SIL.ttf',
+            'aboriginalsans'        => 'AboriginalSansREGULAR.ttf',
+            'jomolhari'             => 'Jomolhari.ttf',
+            'sundaneseunicode'      => 'SundaneseUnicode-1.0.5.ttf',
+            'taiheritagepro'        => 'TaiHeritagePro.ttf',
+            'aegyptus'              => 'Aegyptus.otf',
+            'akkadian'              => 'Akkadian.otf',
+            'aegean'                => 'Aegean.otf',
+            'quivira'               => 'Quivira.otf',
+            'eeyekunicode'          => 'Eeyek.ttf',
+            'lannaalif'             => 'lannaalif-v1-03.ttf',
+            'daibannasilbook'       => 'DBSILBR.ttf',
+            'garuda'                => 'Garuda.ttf',
+            'khmeros'               => 'KhmerOS.ttf',
+            'dhyana'                => 'Dhyana-Regular.ttf',
+            'tharlon'               => 'Tharlon-Regular.ttf',
+            'padaukbook'            => 'Padauk-book.ttf',
+            'zawgyi-one'            => 'ZawgyiOne.ttf',
+            'ayar'                  => 'ayar.ttf',
+            'taameydavidclm'        => 'TaameyDavidCLM-Medium.ttf',
+        ];
+    }
+
+    /**
+     * Returns only font families whose primary font file is present in
+     * the user font directory or the plugin's bundled fonts directory.
+     * Preserves the grouped structure of getInstalledFonts().
+     */
+    public static function getAvailableFontFamilies()
+    {
+        static $cached = null;
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        $fontFileMap  = static::getFontFileMap();
+        $dirs         = static::getDirStructure();
+        $userFontDir  = trailingslashit($dirs['fontDir']);
+        $bundledDir   = defined('FLUENT_PDF_PATH') ? FLUENT_PDF_PATH . 'fonts/' : '';
+
+        $available = [];
+        foreach (static::getInstalledFonts() as $group => $fonts) {
+            foreach ($fonts as $key => $label) {
+                if (!isset($fontFileMap[$key])) {
+                    // Unknown key (e.g. added via fluent/pdf_font_list filter) —
+                    // we have no filename to check, so include it unconditionally.
+                    $available[$group][$key] = $label;
+                    continue;
+                }
+                $file = $fontFileMap[$key];
+                if (
+                    file_exists($userFontDir . $file) ||
+                    ($bundledDir && file_exists($bundledDir . $file))
+                ) {
+                    $available[$group][$key] = $label;
+                }
+            }
+        }
+
+        $cached = $available;
+        return $cached;
+    }
+
+    /**
+     * Returns true when not all core fonts are installed in the user font dir.
+     * Used to show a "download more fonts" notice in the font picker.
+     */
+    public static function hasMissingCoreFonts()
+    {
+        $dirs        = static::getDirStructure();
+        $userFontDir = trailingslashit($dirs['fontDir']);
+        // FreeSans is only available after downloading — not bundled with the plugin.
+        return !file_exists($userFontDir . 'FreeSans.ttf');
+    }
 }

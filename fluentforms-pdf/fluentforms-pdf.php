@@ -5,7 +5,7 @@
  * Description: Download and Email entries as pdf with multiple template for all Fluent Products.
  * Author: WPManageNinja LLC
  * Author URI:  https://wpmanageninja.com
- * Version: 2.1.0
+ * Version: 2.1.1
  * Text Domain: fluentforms-pdf
  * Domain Path: /assets/languages
  * License: GPLv2 or later
@@ -44,7 +44,7 @@ if (defined('FLUENT_PDF')) {
 
 // New constants (used by fluent-pdf codebase)
 define('FLUENT_PDF', true);
-define('FLUENT_PDF_VERSION', '2.1.0');
+define('FLUENT_PDF_VERSION', '2.1.1');
 define('FLUENT_PDF_PATH', plugin_dir_path(__FILE__));
 define('FLUENT_PDF_URL', plugin_dir_url(__FILE__));
 define('FLUENT_PDF_PRODUCTION', 'yes');
@@ -60,7 +60,29 @@ if (!defined('FLUENTPDF_FRAMEWORK_UPGRADE')) {
 }
 
 require_once FLUENT_PDF_PATH . 'vendor/autoload.php';
+require_once FLUENT_PDF_PATH . 'vendor-prefixed/mpdf/mpdf/src/functions.php';
 require_once FLUENT_PDF_PATH . 'API/Pdf.php';
+
+/**
+ * Backward-compat: alias old namespace so custom templates extending the v1 class still work.
+ * The deprecation notice fires only when code actually loads the old class name,
+ * not on every request.
+ *
+ * @deprecated 2.1.1 Use FluentPdf\Modules\FluentForms\Templates\TemplateManager instead.
+ */
+spl_autoload_register(function ($class) {
+    if ($class === 'FluentFormPdf\Classes\Templates\TemplateManager') {
+        _deprecated_function(
+            'FluentFormPdf\Classes\Templates\TemplateManager',
+            '2.1.1',
+            'FluentPdf\Modules\FluentForms\Templates\TemplateManager'
+        );
+        class_alias(
+            'FluentPdf\Modules\FluentForms\Templates\TemplateManager',
+            'FluentFormPdf\Classes\Templates\TemplateManager'
+        );
+    }
+});
 
 class FluentPdf
 {

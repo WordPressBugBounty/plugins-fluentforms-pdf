@@ -2,60 +2,98 @@
 
 <?php if(count($downloadableFiles)): ?>
 <style>
-    .font_downloader_wrapper .ff_download_loading {
-        margin-top: 20px;
+    .ff_font_installer {
+        max-width: 520px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 40px 32px;
+        text-align: center;
     }
-    .font_downloader_wrapper button#ff_download_fonts {
+    .ff_font_installer img {
+        max-width: 160px;
+        margin-bottom: 24px;
+    }
+    .ff_font_installer h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e1e1e;
+        margin: 0 0 8px;
+    }
+    .ff_font_installer p {
+        font-size: 14px;
+        color: #606266;
+        line-height: 1.6;
+        margin: 0 0 24px;
+    }
+    .ff_font_installer .ff_install_btn {
         position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         height: 40px;
-        width: 220px;
-        background: #82c8ff;
-        border-radius: 4px;
+        min-width: 200px;
+        padding: 0 24px;
+        background: #1a73e8;
         border: none;
-        color: black;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
         cursor: pointer;
-    }
-    .font_downloader_wrapper {
-        width: 650px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .font_downloader_wrapper button.is-loading {
         overflow: hidden;
-        border: 0;
-        pointer-events: inherit;
+        transition: background 0.2s;
     }
-    .font_downloader_wrapper button.is-loading span{
+    .ff_font_installer .ff_install_btn:hover {
+        background: #1b5fc1;
+    }
+    .ff_font_installer .ff_install_btn:disabled {
+        cursor: not-allowed;
+    }
+    .ff_font_installer .ff_install_btn .ff_download_fonts_bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 0;
+        background: #1a7efb;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+    .ff_font_installer .ff_install_btn .ff_download_fonts_text {
         position: relative;
         z-index: 1;
     }
-    .font_downloader_wrapper button.is-loading::before{
-        background-color: rgba(255, 255, 255, 0.80);
+    .ff_font_installer .ff_download_loading {
+        margin-top: 16px;
+        font-size: 13px;
+        color: #909399;
+        min-height: 20px;
     }
-    .font_downloader_wrapper button.is-loading .ff_download_fonts_bar{
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 0;
-        content: "";
-        background-color: #2196F3;
-        height: 40px;
-        position: absolute;
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
+    .ff_font_installer .ff_download_logs {
+        margin-top: 12px;
+        text-align: left;
+        font-size: 12px;
+        color: #909399;
+        max-height: 120px;
+        overflow-y: auto;
+        background: #f5f7fa;
+        border-radius: 4px;
+        padding: 8px 12px;
+        line-height: 1.8;
     }
-
-
+    .ff_font_installer .ff_download_logs.hidden {
+        display: none;
+    }
 </style>
-<div  class="font_downloader_wrapper text-center" style="max-width: 600px;margin: 10px auto;">
-    <img class="mb-3" src="<?php echo esc_url(FLUENT_PDF_URL . 'assets/images/pdf-img.png'); ?>" alt="">
-    <h3 class="mb-2">Fonts are required for PDF Generation</h3>
-    <p class="mb-4">This module requires to download fonts for PDF generation. Please click on the bellow button and it will download the required font files. This is one time job</p>
-    <button id="ff_download_fonts" class="el-button el-button--primary">
-        <span class="ff_download_fonts_bar"
-        ></span>
-        <span class="ff_download_fonts_text">Install Fonts</span>
+<div class="ff_font_installer">
+    <img src="<?php echo esc_url(FLUENT_PDF_URL . 'assets/images/pdf-img.png'); ?>" alt="">
+    <h3><?php echo esc_html__('Fonts Required for PDF Generation', 'fluentforms-pdf'); ?></h3>
+    <p><?php echo esc_html__('This module requires fonts for PDF generation. Click the button below to download the required font files. This is a one-time setup.', 'fluentforms-pdf'); ?></p>
+    <button id="ff_download_fonts" class="ff_install_btn">
+        <span class="ff_download_fonts_bar"></span>
+        <span class="ff_download_fonts_text"><?php echo esc_html__('Install Fonts', 'fluentforms-pdf'); ?></span>
     </button>
     <div class="ff_download_loading"></div>
     <div class="ff_download_logs hidden"></div>

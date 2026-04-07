@@ -22,10 +22,19 @@ class GlobalFontManager
             'get_global_settings' => 'getGlobalSettingsAjax',
             'save_global_settings' => 'saveGlobalSettings',
             'downloadFonts' => 'downloadFonts',
+            'get_font_status' => 'getFontStatus',
         ];
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error(['message' => __('You do not have permission to perform this action', 'fluent-pdf')], 403);
+        }
+
+        $nonce = isset($_REQUEST['nonce'])
+            ? sanitize_text_field(wp_unslash($_REQUEST['nonce']))
+            : sanitize_text_field(wp_unslash($_SERVER['HTTP_X_WP_NONCE'] ?? ''));
+
+        if (!wp_verify_nonce($nonce, 'fluent_pdf_admin_nonce')) {
+            wp_send_json_error(['message' => __('Security verification failed. Please reload and try again.', 'fluent-pdf')], 403);
         }
 
         $route = isset($_REQUEST['route']) ? sanitize_text_field(wp_unslash($_REQUEST['route'])) : '';
@@ -93,11 +102,11 @@ class GlobalFontManager
                 'options' => AvailableOptions::getOrientations()
             ],
             [
-                'key' => 'font_family',
-                'label' => 'Font Family',
-                'component' => 'dropdown-group',
+                'key'        => 'font_family',
+                'label'      => 'Font Family',
+                'component'  => 'dropdown-group',
                 'placeholder' => 'Select Font',
-                'options' => AvailableOptions::getInstalledFonts()
+                'options'    => AvailableOptions::getAvailableFontFamilies(),
             ],
             [
                 'key' => 'font_size',
@@ -136,6 +145,19 @@ class GlobalFontManager
 
 
 
+    public function getFontStatus()
+    {
+        $fontManager = new FontDownloader();
+        $coreFonts = $fontManager->getCoreFonts();
+        $downloadable = $fontManager->getDownloadableFonts();
+
+        wp_send_json_success([
+            'total'     => count($coreFonts),
+            'installed' => count($coreFonts) - count($downloadable),
+            'missing'   => count($downloadable),
+        ]);
+    }
+
     public function downloadFonts()
     {
         Activator::maybeCreateFolderStructure();
@@ -165,7 +187,9 @@ class GlobalFontManager
         Vite::enqueueScript('fluent_pdf_admin', 'admin/FontManager/FontManager.js', array('jquery'), FLUENT_PDF_VERSION, true);
 
         $fontManager = new FontDownloader();
-        $downloadableFiles = $fontManager->getDownloadableFonts();
+        $downloadableFiles = $fontManager->isBaselineMissing()
+            ? $fontManager->getDownloadableFonts()
+            : [];
 
         wp_localize_script('fluent_pdf_admin', 'fluent_pdf_admin', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
@@ -176,7 +200,7 @@ class GlobalFontManager
         $globalSettingsUrl = '#';
         if (!$downloadableFiles) {
             $statuses = $this->getSystemStatuses();
-            $globalSettingsUrl = admin_url('admin.php?page=fluent_pdf.php/settings');
+            $globalSettingsUrl = apply_filters('fluent_pdf/global_settings_url', admin_url('options-general.php?page=fluent_pdf_settings'));
 
             if (!get_option($this->optionKey)) {
                 update_option($this->optionKey, $this->globalSettings(), 'no');

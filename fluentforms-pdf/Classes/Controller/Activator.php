@@ -11,6 +11,7 @@ class Activator
     public static function activate()
     {
         self::maybeCreateFolderStructure();
+        self::maybeCopyDefaultFonts();
 
         if (!wp_next_scheduled('fluent_pdf_cleanup_tmp_dir')) {
             wp_schedule_event(time(), 'daily', 'fluent_pdf_cleanup_tmp_dir');
@@ -19,6 +20,40 @@ class Activator
         // Migrate settings from old fluentforms-pdf plugin if Fluent Forms is active
         if (defined('FLUENTFORM')) {
             Migration::maybeRun();
+        }
+    }
+
+    /**
+     * Copy bundled default fonts to the writable font directory
+     * so PDFs work immediately without manual font download.
+     * Skips files that already exist to avoid overwriting user-downloaded fonts.
+     */
+    public static function maybeCopyDefaultFonts()
+    {
+        $dirs = AvailableOptions::getDirStructure();
+        $fontDir = $dirs['fontDir'];
+
+        if (!is_dir($fontDir)) {
+            return;
+        }
+
+        $bundledFontDir = FLUENT_PDF_PATH . 'fonts/';
+        if (!is_dir($bundledFontDir)) {
+            return;
+        }
+
+        $defaultFonts = ['DejaVuSans.ttf', 'DejaVuSans-Bold.ttf'];
+
+        foreach ($defaultFonts as $font) {
+            $source = $bundledFontDir . $font;
+            $destination = $fontDir . '/' . $font;
+
+            if (!file_exists($destination) && file_exists($source)) {
+                if (!copy($source, $destination)) {
+                    // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                    error_log(sprintf('[Fluent PDF] Failed to copy default font %s to %s', $font, $fontDir));
+                }
+            }
         }
     }
 

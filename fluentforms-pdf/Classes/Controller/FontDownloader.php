@@ -72,6 +72,23 @@ class FontDownloader
         return true;
     }
 
+    /**
+     * Check whether the baseline fonts required for PDF generation are missing.
+     */
+    public function isBaselineMissing()
+    {
+        $fontDir = $this->getFontDir();
+        $baseline = ['DejaVuSans.ttf', 'DejaVuSans-Bold.ttf'];
+
+        foreach ($baseline as $font) {
+            if (!file_exists($fontDir . $font)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private function getFontDir()
     {
         $dirStructure = AvailableOptions::getDirStructure();

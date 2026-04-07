@@ -110,7 +110,7 @@ abstract class TemplateManager
             if (wp_doing_ajax() || defined('DOING_CRON')) {
                 return null;
             }
-            $settingsUrl = admin_url('admin.php?page=fluent_forms_add_ons&sub_page=fluentform_pdf');
+            $settingsUrl = apply_filters('fluent_pdf/global_settings_url', admin_url('options-general.php?page=fluent_pdf_settings'));
             wp_die(
                 '<h2>' . esc_html__('Fluent PDF - Font Error', 'fluent-pdf') . '</h2>'
                 . '<p>' . esc_html($e->getMessage()) . '</p>'
@@ -137,9 +137,7 @@ abstract class TemplateManager
             'orientation'   => Arr::get($appearance, 'orientation'),
         ];
 
-        if ($fontFamily = ArrayHelper::get($appearance, 'font_family')) {
-            $mpdfConfig['default_font'] = $fontFamily;
-        }
+        $mpdfConfig['default_font'] = ArrayHelper::get($appearance, 'font_family', 'dejavusans');
 
         if (!defined('FLUENTFORMPRO')) {
             $footer .= '<p style="text-align: center;">Powered By <a target="_blank" href="https://wpmanageninja.com/downloads/fluentform-pro-add-on/">Fluent Forms</a></p>';

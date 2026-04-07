@@ -4,7 +4,7 @@ Tags: PDF, Form To PDF, attachment, fluent forms
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,12 @@ You can also send these PDF files via emails to your users and make them passwor
 
 
 == Changelog ==
+
+= 2.1.1 - April 7, 2026 =
+* Added a default font 
+* Added nonce verification to FontManager
+* Settings gated on baseline fonts only
+* Bundled default fonts and moved menu under WP Settings
 
 = 2.1.0 - March 30, 2026 =
 * Security: Hardened access controls, input sanitization, admin capability checks, and output escaping across all endpoints

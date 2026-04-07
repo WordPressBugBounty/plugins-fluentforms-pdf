@@ -41,7 +41,9 @@ class FluentFormsIntegration
 
     protected function registerHooks()
     {
-        add_filter('fluent_pdf_hide_menu', '__return_true');
+        add_filter('fluent_pdf/global_settings_url', function () {
+            return admin_url('options-general.php?page=fluent_pdf_settings');
+        });
 
         add_action('fluentform_pdf_cleanup_tmp_dir', [$this, 'cleanupTempDir']);
 
@@ -64,10 +66,10 @@ class FluentFormsIntegration
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fluentform_sanitize_html() escapes output
                 echo fluentform_sanitize_html(
                     '<div class="notice notice-warning"><p>'
-                    . esc_html__('Fluent PDF requires fonts to be downloaded. Please ', 'fluent-pdf')
-                    . '<a href="' . admin_url('admin.php?page=fluent_forms_add_ons&sub_page=fluentform_pdf') . '">'
+                    . esc_html__('Fluent PDF requires configuration. Please ', 'fluent-pdf')
+                    . '<a href="' . esc_url(apply_filters('fluent_pdf/global_settings_url', admin_url('options-general.php?page=fluent_pdf_settings'))) . '">'
                     . esc_html__('click here', 'fluent-pdf') . '</a>'
-                    . esc_html__(' to download and configure the settings', 'fluent-pdf')
+                    . esc_html__(' to configure the settings', 'fluent-pdf')
                     . '</p></div>'
                 );
             }
@@ -177,6 +179,7 @@ class FluentFormsIntegration
             'paper_size'         => 'A4',
             'orientation'        => 'P',
             'font'               => 'default',
+            'font_family'        => 'dejavusans',
             'font_size'          => '14',
             'font_color'         => '#323232',
             'accent_color'       => '#989797',
@@ -611,7 +614,14 @@ class FluentFormsIntegration
                 'label'       => __('Font Family', 'fluent-pdf'),
                 'component'   => 'dropdown-group',
                 'placeholder' => __('Select Font', 'fluent-pdf'),
-                'options'     => AvailableOptions::getInstalledFonts(),
+                'options'     => AvailableOptions::getAvailableFontFamilies(),
+                'inline_tip'  => AvailableOptions::hasMissingCoreFonts()
+                    ? sprintf(
+                        /* translators: %s: URL to global PDF settings */
+                        __('Only installed fonts are shown. <a href="%s">Download more fonts</a> from Global PDF Settings.', 'fluent-pdf'),
+                        esc_url(apply_filters('fluent_pdf/global_settings_url', admin_url('options-general.php?page=fluent_pdf_settings')))
+                    )
+                    : '',
             ],
             [
                 'key'       => 'font_size',

@@ -15,6 +15,7 @@ class GlobalPdfConfig
             'paper_size'         => 'A4',
             'orientation'        => 'P',
             'font'               => 'default',
+            'font_family'        => 'dejavusans',
             'font_size'          => 14,
             'font_color'         => '#323232',
             'accent_color'       => '#989797',
